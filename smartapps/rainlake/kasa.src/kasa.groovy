@@ -40,9 +40,9 @@ preferences {
 }
 
 def discoverDevices() {
-	if(!atomicState.terminalUUID) {
-		atomicState.terminalUUID = UUID.randomUUID().toString()
-	}
+    if(!atomicState.terminalUUID) {
+       atomicState.terminalUUID = UUID.randomUUID().toString()
+    }
     if(!settings.username || !settings.password) {
     	return loginToKasa()
     } else {
@@ -190,6 +190,7 @@ Map getDeviceList() {
                     ]
                 }
             } else {
+            	atomicState.token = null
             	log.debug data
             }
             atomicState.devices = map
@@ -223,6 +224,7 @@ def turnDevice(deviceid, state) {
                     
                 } else {
                     log.debug data
+                    atomicState.token = null
                 }
             }
         } catch (e) {
@@ -231,6 +233,9 @@ def turnDevice(deviceid, state) {
     }
 }
 def getDeviceState(deviceId) {
+	if(!atomicState.token && !login()) {
+    	return 'offline'
+    }
 	def device = atomicState.devices[deviceId]
     if(device != null) {
         def params = [
@@ -250,7 +255,12 @@ def getDeviceState(deviceId) {
                 if(data.error_code == 0) {
                     data = jsonSlurper.parseText(data.result.responseData)
                     return data.system.get_sysinfo.relay_state == 0 ? 'off' : 'on'
+                } else if(data.error_code == -20651) {
+                	log.debug "token expired"
+                	atomicState.token = null
+                    return 'offline'
                 } else {
+                	log.debug data.error_code
                 	return 'offline'
                 }
             }
