@@ -1,5 +1,5 @@
 /**
- *  Copyright 2017 Rainlake
+ *  Copyright 2015 SmartThings
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License. You may obtain a copy of the License at:
@@ -12,12 +12,12 @@
  *
  *  On/Off Button Tile
  *
- *  Author: Rainlake
+ *  Author: SmartThings
  *
- *  Date: 2017-05-30
+ *  Date: 2013-05-01
  */
 metadata {
-	definition (name: "Wi-Fi Smart Light Switch", namespace: "rainlake", author: "Rainlake") {
+	definition (name: "Wi-Fi Smart Light Switch", namespace: "rainlake", author: "SmartThings") {
 		capability "Actuator"
 		capability "Switch"
 		capability "Sensor"
